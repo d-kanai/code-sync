@@ -1,4 +1,4 @@
 module.exports = {
   //for production build
-  // publicPath: '/vue-jest-practice/'
+  //publicPath: '/code-sync/'
 };
