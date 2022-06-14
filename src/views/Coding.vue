@@ -67,11 +67,11 @@
                 </span>
               </p>
             </div>
-            <a v-for="issue in issues" :key="issue" class="panel-block is-active">
+            <a v-for="idea in ideas" :key="idea" class="panel-block is-active">
               <span class="panel-icon">
                 <i class="fas fa-book" aria-hidden="true"></i>
             </span>
-            {{issue.name}}
+            {{idea.name}}
           </a>
         </article>
         </div>
