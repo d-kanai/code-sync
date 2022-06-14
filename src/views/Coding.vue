@@ -3,19 +3,19 @@
     <div>
       <div class="focus-panel columns is-mobile">
         <div 
-          @keydown="(e) => onFocusChange(e, 'test')"
+          @keydown.space="(e) => onFocusChange(e, 'test')"
           v-bind:class="{current: this.focus === 'test'}"
           class="focus-item focus-test column" tabindex="1">
           <div>Test</div>
         </div>
         <div 
-          @keydown="(e) => onFocusChange(e, 'code')" 
+          @keydown.space="(e) => onFocusChange(e, 'code')" 
           v-bind:class="{current: this.focus === 'code'}"
           class="focus-item focus-code column" tabindex="2">
           Code
         </div>
         <div 
-          @keydown="(e) => onFocusChange(e, 'refactoring')" 
+          @keydown.space="(e) => onFocusChange(e, 'refactoring')" 
           v-bind:class="{current: this.focus === 'refactoring'}"
           class="focus-item focus-refactoring column" tabindex="3">
           Clean
@@ -33,47 +33,21 @@
           </div>
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
-          <div class="zen refactoring">
+          <div class="zen refactoirng">
             <p>Make It Clean. Save Knowdlege to Code.</p>
           </div>
-          <article class="panel is-info">
-            <p class="panel-heading">
-              Code Issue
-            </p>
-            <div class="panel-block">
-              <p class="control has-icons-left">
-                <input class="input is-info" type="text" placeholder="Search">
-                <span class="icon is-left">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-              </p>
+          <div class="issue">
+            <input @keydown.enter="onSelectIssue" type="text" name="yourarea" autocomplete="on" list="tokyo" class="issueSearch" placeholder="Code Issue" />
+            <datalist id="tokyo">
+              <option v-for="issue in issues" :key="issue" :value="issue.name"/>
+            </datalist>
+            <br/>
+            <br/>
+            <div class="pabel-block">
+              <h1>{{this.selectedIssue.name}}</h1>
+              <p v-for="description in selectedIssue.descriptions" :key="description" class="description">{{description}}</p>
             </div>
-            <a v-for="issue in issues" :key="issue" class="panel-block is-active">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-              </span>
-              {{issue.name}}
-            </a>
-          </article>
-          <article class="panel is-info">
-            <p class="panel-heading">
-              Refactoring Idea
-            </p>
-            <div class="panel-block">
-              <p class="control has-icons-left">
-                <input class="input is-info" type="text" placeholder="Search">
-                <span class="icon is-left">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-              </p>
-            </div>
-            <a v-for="idea in ideas" :key="idea" class="panel-block is-active">
-              <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
-            </span>
-            {{idea.name}}
-          </a>
-        </article>
+          </div>
         </div>
       </div>
     </div>
@@ -83,26 +57,29 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+interface Issue {
+    name:string
+    descriptions:string[]
+}
+
 export default defineComponent({
   methods: {
     onFocusChange(event:any, focus:string) {
-      if(event.code === 'Space') {
-        this.focus = focus
-      }
-    }
+      this.focus = focus
+    },
+    onSelectIssue(event:any) {
+      this.selectedIssue = this.issues.find(issue => issue.name === event.target.value)!
+    },
   },
   data() {
     return {
       focus: '',
+      selectedIssue: {} as Issue,
       issues: [
-        {name: 'Long Method'},
-        {name: 'Big Class'},
-        {name: 'Temp Variable'},
-      ],
-      ideas: [
-        {name: 'Extract Method'},
-        {name: 'Inline Variable'},
-        {name: 'Inline Method'},
+        {name: 'Long Method'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
+        {name: 'Big Class'    , descriptions: ['1つの仕事をするクラスに分割できないか？', '']},
+        {name: 'Duplicate Code'    , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
+        {name: 'Temp Variable', descriptions: ['不要な変数ではないか？']},
       ],
       searchWord: "",
     };
@@ -173,7 +150,7 @@ export default defineComponent({
   }
 }
 .zen {
-  height: 400px;
+  height: 300px;
   font-weight: bold;
   font-family: serif;
   font-size: 50px;
@@ -190,5 +167,16 @@ export default defineComponent({
   font-family: serif;
   font-size: 20px;
   color: grey;
+}
+.issue {
+  text-align: center;
+}
+.issueSearch {
+  font-size: 30px;
+
+}
+.description {
+  font-size: 25px;
+
 }
 </style>
