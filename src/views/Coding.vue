@@ -1,21 +1,25 @@
 <template>
-  <div class='content'>
+  <div
+   class='content' 
+   v-bind:class="[
+    {test : this.focus === 'test'},
+    {code: this.focus === 'code'},
+    {refactoring: this.focus === 'refactoring'}
+   ]"
+   @keydown="onFocusChange">
     <div>
       <div class="focus-panel columns is-mobile">
         <div 
-          @keydown.space="(e) => onFocusChange(e, 'test')"
           v-bind:class="{current: this.focus === 'test'}"
           class="focus-item focus-test column" tabindex="1">
           <div>Test</div>
         </div>
         <div 
-          @keydown.space="(e) => onFocusChange(e, 'code')" 
           v-bind:class="{current: this.focus === 'code'}"
           class="focus-item focus-code column" tabindex="2">
           Code
         </div>
         <div 
-          @keydown.space="(e) => onFocusChange(e, 'refactoring')" 
           v-bind:class="{current: this.focus === 'refactoring'}"
           class="focus-item focus-refactoring column" tabindex="3">
           Clean
@@ -32,21 +36,12 @@
             <p>Just Make It Pass.</p>
           </div>
         </div>
-        <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
+        <div class="focus-tool-item" v-show="this.focus === 'refactoring'" >
           <div class="zen refactoirng">
-            <p>Make It Clean. Save Knowdlege to Code.</p>
+            <p>Save Knowdlege to Code.</p>
           </div>
-          <div class="issue">
-            <input @keydown.enter="onSelectIssue" type="text" name="yourarea" autocomplete="on" list="tokyo" class="issueSearch" placeholder="Code Issue" />
-            <datalist id="tokyo">
-              <option v-for="issue in issues" :key="issue" :value="issue.name"/>
-            </datalist>
-            <br/>
-            <br/>
-            <div class="pabel-block">
-              <h1>{{this.selectedIssue.name}}</h1>
-              <p v-for="description in selectedIssue.descriptions" :key="description" class="description">{{description}}</p>
-            </div>
+          <div class="issueArea">
+            <span v-for="issue in issues" :key="issue" class="issue tag is-info is-large">{{issue.name}}</span>
           </div>
         </div>
       </div>
@@ -64,10 +59,26 @@ interface Issue {
 
 export default defineComponent({
   methods: {
-    onFocusChange(event:any, focus:string) {
-      this.focus = focus
+    onFocusChange(event:any) {
+      if(event.key === 'Control') {
+        if(this.focus === '') {
+          this.focus = 'test'
+        } else if(this.focus === 'test') {
+          this.focus = 'code'
+        } else if(this.focus === 'code') {
+          this.focus = 'refactoring'
+        } else if(this.focus === 'refactoring') {
+          this.focus = 'test'
+        }
+      } else {
+        console.log("ho")
+
+      }
     },
     onSelectIssue(event:any) {
+      if(event.key === 'Control') {
+        this.focus = 'test'
+      }
       this.selectedIssue = this.issues.find(issue => issue.name === event.target.value)!
     },
   },
@@ -78,8 +89,10 @@ export default defineComponent({
       issues: [
         {name: 'Long Method'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
         {name: 'Big Class'    , descriptions: ['1つの仕事をするクラスに分割できないか？', '']},
-        {name: 'Duplicate Code'    , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
+        {name: 'Duplicate Code' , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
         {name: 'Temp Variable', descriptions: ['不要な変数ではないか？']},
+        {name: 'Violate SLAP', descriptions: ['不要な変数ではないか？']},
+        {name: 'Long Parmeters', descriptions: ['不要な変数ではないか？']},
       ],
       searchWord: "",
     };
@@ -93,7 +106,18 @@ export default defineComponent({
   margin: 0px
 }
 .content {
-  margin: 10px;
+  padding: 10px;
+  height: 100vh;
+  &.test{
+    background-color:#ffb0b0;
+  }
+  &.code {
+    background-color: #d6ffd6;
+  }
+  &.refactoring {
+    background-color: #c6e3ff;
+  }
+  transition: 0.2s ease-out 0.1s;
 }
 .focus-tool-item {
   opacity: 1;
@@ -105,9 +129,9 @@ export default defineComponent({
 .focus-item {
   color: white;
   margin: 1px;
-  font-size: 30px;
+  font-size: 40px;
   font-weight: bold;
-  height: 200px;
+  height: 250px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -118,7 +142,7 @@ export default defineComponent({
   }
   &:focus {
     outline: 2px;
-    outline-style: solid;
+    outline-style: none;
   }
   transition: 0.2s ease-out 0.1s;
 }
@@ -154,7 +178,7 @@ export default defineComponent({
   font-weight: bold;
   font-family: serif;
   font-size: 50px;
-  color: grey;
+  color: balck;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -168,15 +192,11 @@ export default defineComponent({
   font-size: 20px;
   color: grey;
 }
-.issue {
+.issueArea {
   text-align: center;
 }
-.issueSearch {
-  font-size: 30px;
-
-}
-.description {
-  font-size: 25px;
-
+.issue {
+  font-size: 38px;
+  margin: 5px;
 }
 </style>
