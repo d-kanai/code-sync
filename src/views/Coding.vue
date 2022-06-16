@@ -11,7 +11,7 @@
       <div class="focus-panel columns is-mobile">
         <div 
           v-bind:class="{current: this.focus === 'test'}"
-          class="focus-item focus-test column" tabindex="1" autofocus>
+          class="focus-item focus-test column" tabindex="1" autofocus ref="focusTest" >
           <div>Test</div>
         </div>
         <div 
@@ -37,9 +37,9 @@
           </div>
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
-          <div class="zen refactoirng">
+          <div class="zen">
             <p>Save Knowdlege to Code.</p>
-            <input v-model="issueSearchWord" id="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
+            <input v-model="issueSearchWord" ref="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
           </div>
           <div class="issueArea">
             <span v-for="issue in filteredIssues" :key="issue" class="issue tag is-info is-large">{{issue.name}}</span>
@@ -69,9 +69,12 @@ export default defineComponent({
         } else if(this.focus === 'test') {
           this.focus = 'code'
         } else if(this.focus === 'code') {
-          this.focus = 'refactoring'
+          this.focus = 'refactoring';
+          this.$nextTick(() => (this.$refs.issueSearchWord as any).focus());
+          this.issueSearchWord = ''
         } else if(this.focus === 'refactoring') {
           this.focus = 'test';
+          this.$nextTick(() => (this.$refs.focusTest as any).focus());
         }
       }
     },
@@ -186,7 +189,7 @@ export default defineComponent({
   }
 }
 .zen {
-  height: 300px;
+  margin-top: 80px;
   font-weight: bold;
   font-family: serif;
   font-size: 50px;
@@ -196,13 +199,6 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.zen.refactoring {
-  height: 100%;
-  font-weight: bold;
-  font-family: serif;
-  font-size: 20px;
-  color: grey;
 }
 .issueArea {
   text-align: center;
@@ -215,6 +211,9 @@ export default defineComponent({
   font-size: 35px;
 }
 .border-less-input {
+  color: grey;
+  padding: 16px;
+  margin: 20px;
   font-size: 30px;
   border: none;
   border-bottom: 1px solid grey;
