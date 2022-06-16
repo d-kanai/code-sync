@@ -212,7 +212,7 @@ export default defineComponent({
   margin: 5px;
 }
 .tag:not(body).is-large {
-  font-size: 25px;
+  font-size: 35px;
 }
 .border-less-input {
   font-size: 30px;
