@@ -11,7 +11,7 @@
       <div class="focus-panel columns is-mobile">
         <div 
           v-bind:class="{current: this.focus === 'test'}"
-          class="focus-item focus-test column" tabindex="1">
+          class="focus-item focus-test column" tabindex="1" autofocus>
           <div>Test</div>
         </div>
         <div 
@@ -21,7 +21,7 @@
         </div>
         <div 
           v-bind:class="{current: this.focus === 'refactoring'}"
-          class="focus-item focus-refactoring column" tabindex="3">
+          class="focus-item focus-refactoring column">
           Clean
         </div>
       </div>
@@ -36,12 +36,13 @@
             <p>Just Make It Pass.</p>
           </div>
         </div>
-        <div class="focus-tool-item" v-show="this.focus === 'refactoring'" >
+        <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
           <div class="zen refactoirng">
             <p>Save Knowdlege to Code.</p>
+            <input v-model="issueSearchWord" id="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
           </div>
           <div class="issueArea">
-            <span v-for="issue in issues" :key="issue" class="issue tag is-info is-large">{{issue.name}}</span>
+            <span v-for="issue in filteredIssues" :key="issue" class="issue tag is-info is-large">{{issue.name}}</span>
           </div>
         </div>
       </div>
@@ -60,6 +61,8 @@ interface Issue {
 export default defineComponent({
   methods: {
     onFocusChange(event:any) {
+      console.log(event)
+      console.log(this.focus)
       if(event.key === 'Control') {
         if(this.focus === '') {
           this.focus = 'test'
@@ -68,11 +71,8 @@ export default defineComponent({
         } else if(this.focus === 'code') {
           this.focus = 'refactoring'
         } else if(this.focus === 'refactoring') {
-          this.focus = 'test'
+          this.focus = 'test';
         }
-      } else {
-        console.log("ho")
-
       }
     },
     onSelectIssue(event:any) {
@@ -82,16 +82,22 @@ export default defineComponent({
       this.selectedIssue = this.issues.find(issue => issue.name === event.target.value)!
     },
   },
+  computed: {
+    filteredIssues():Issue[] {
+      return this.issues.filter(issue => issue.name.toLowerCase().replace(/\s/g, '').includes(this.issueSearchWord.replace(/\s/g, '').toLowerCase()))
+    }
+  },
   data() {
     return {
       focus: '',
+      issueSearchWord: '',
       selectedIssue: {} as Issue,
       issues: [
         {name: 'Long Method'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
         {name: 'Big Class'    , descriptions: ['1つの仕事をするクラスに分割できないか？', '']},
         {name: 'Duplicate Code' , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
         {name: 'Temp Variable', descriptions: ['']},
-        {name: 'Long Parmeters', descriptions: ['']},
+        {name: 'Long Parameters', descriptions: ['']},
         {name: 'Naming', descriptions: ['']},
         {name: 'Dead Code', descriptions: ['']},
         {name: 'Arrow', descriptions: ['']},
@@ -204,5 +210,17 @@ export default defineComponent({
 .issue {
   font-size: 38px;
   margin: 5px;
+}
+.tag:not(body).is-large {
+  font-size: 25px;
+}
+.border-less-input {
+  font-size: 30px;
+  border: none;
+  border-bottom: 1px solid grey;
+  background: none;
+  &:focus {
+    outline-style: none;
+  }
 }
 </style>
