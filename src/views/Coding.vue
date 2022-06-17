@@ -28,7 +28,7 @@
       <div class="focus-tool">
         <div class="focus-tool-item" v-if="this.focus === 'test'">
           <div class="zen">
-            <p>Focus Specification.</p>
+            <p>Define Clear Specification.</p>
           </div>
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'code'" >
@@ -42,7 +42,9 @@
             <input v-model="issueSearchWord" ref="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
           </div>
           <div class="issueArea">
-            <span v-for="issue in filteredIssues" :key="issue" class="issue tag is-info is-large">{{issue.name}}</span>
+            <span v-for="issue in filteredIssues" :key="issue"
+              v-bind:class="{doing: this.filteredIssues.length === 1}"
+              class="issue tag is-info is-large">{{issue.name}}</span>
           </div>
         </div>
       </div>
@@ -110,6 +112,8 @@ export default defineComponent({
         {name: 'Violate SLAP', descriptions: ['']},
         {name: 'For', descriptions: ['']},
         {name: 'Switch', descriptions: ['']},
+        {name: 'Incidental Details', descriptions: ['']},
+        {name: 'Setup Sermon', descriptions: ['']},
       ],
       searchWord: "",
     };
@@ -214,8 +218,27 @@ export default defineComponent({
 }
 .tag:not(body).is-large {
   font-size: 35px;
+  transition: 0.1s ease 0.1s;
+  &.doing {
+    height: 200px;
+    background: white;
+    color: #2980b9;
+    animation: blinkAnimation 1s ease infinite alternate;
+    transition: 0.1s ease 0.1s;
+    font-size: 50px;
+    font-weight: bold;
+  }
+}
+@keyframes blinkAnimation {
+  0% {
+    border: 20px solid #c6e3ff;
+  }
+  100% {
+    border: 20px solid #2980b9;
+  }
 }
 .border-less-input {
+  text-align: center;
   color: grey;
   padding: 16px;
   margin: 20px;
