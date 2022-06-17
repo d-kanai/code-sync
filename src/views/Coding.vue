@@ -108,6 +108,8 @@ export default defineComponent({
         {name: 'Primitive Obsession', descriptions: ['']},
         {name: 'Data Clump', descriptions: ['']},
         {name: 'Violate SLAP', descriptions: ['']},
+        {name: 'For', descriptions: ['']},
+        {name: 'Switch', descriptions: ['']},
       ],
       searchWord: "",
     };
@@ -134,6 +136,9 @@ export default defineComponent({
   }
   transition: 0.2s ease-out 0.1s;
 }
+.focus-panel {
+  margin: 20px;
+}
 .focus-tool-item {
   opacity: 1;
   &.current { //not work when add v-if
@@ -143,7 +148,7 @@ export default defineComponent({
 }
 .focus-item {
   color: white;
-  margin: 1px;
+  margin: 4px;
   font-size: 40px;
   font-weight: bold;
   height: 250px;
