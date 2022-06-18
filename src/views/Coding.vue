@@ -63,12 +63,18 @@
             <span class="icon">
               <i class="fas fa-seedling"></i>
             </span>
-            <input v-model="issueSearchWord" ref="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
+            <input v-model="issueSearchWord" @input="onInputSearchWord" ref="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
           </div>
           <div class="issueArea">
             <span v-for="issue in filteredIssues" :key="issue"
-              v-bind:class="{doing: this.filteredIssues.length === 1}"
-              class="issue tag is-info is-large">{{issue.name}}</span>
+              v-bind:class="{doing: this.isDoingIssue}"
+              class="issue tag is-info is-large">{{issue.name}}
+              <span 
+                class="code-issue-fix-count"
+                v-bind:class="{doing: this.isDoingIssue}"
+                >{{issue.fixCount}}
+              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -81,14 +87,21 @@ import { defineComponent } from "vue";
 
 interface Issue {
     name:string
+    fixCount:number
     descriptions:string[]
 }
 
 export default defineComponent({
   methods: {
+    onInputSearchWord(event:any) {
+      if(this.isDoingIssue) {
+        this.selectedIssue = this.filteredIssues[0]
+      } else {
+        this.selectedIssue = {} as Issue
+      }
+    },
     onFocusChange(event:any) {
       console.log(event)
-      console.log(this.focus)
       if(event.key === 'Control') {
         if(this.focus === '') {
           this.focus = 'test'
@@ -103,17 +116,19 @@ export default defineComponent({
           this.$nextTick(() => (this.$refs.focusTest as any).focus());
         }
       }
-    },
-    onSelectIssue(event:any) {
-      if(event.key === 'Control') {
-        this.focus = 'test'
+      if(event.key === 'Enter') {
+        if(this.selectedIssue.name != '') {
+          this.selectedIssue.fixCount++;
+        }
       }
-      this.selectedIssue = this.issues.find(issue => issue.name === event.target.value)!
     },
   },
   computed: {
     filteredIssues():Issue[] {
       return this.issues.filter(issue => issue.name.toLowerCase().replace(/\s/g, '').includes(this.issueSearchWord.replace(/\s/g, '').toLowerCase()))
+    },
+    isDoingIssue():boolean {
+      return this.filteredIssues.length === 1
     }
   },
   data() {
@@ -122,24 +137,26 @@ export default defineComponent({
       issueSearchWord: '',
       selectedIssue: {} as Issue,
       issues: [
-        {name: 'Long Method'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
-        {name: 'Big Class'    , descriptions: ['1つの仕事をするクラスに分割できないか？', '']},
-        {name: 'Duplicate Code' , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
-        {name: 'Temp Variable', descriptions: ['']},
-        {name: 'Long Parameters', descriptions: ['']},
-        {name: 'Naming', descriptions: ['']},
-        {name: 'Dead Code', descriptions: ['']},
-        {name: 'Arrow', descriptions: ['']},
-        {name: 'Feature Envy', descriptions: ['']},
-        {name: 'Primitive Obsession', descriptions: ['']},
-        {name: 'Data Clump', descriptions: ['']},
-        {name: 'Violate SLAP', descriptions: ['']},
-        {name: 'For', descriptions: ['']},
-        {name: 'Switch', descriptions: ['']},
-        {name: 'Incidental Details', descriptions: ['']},
-        {name: 'Setup Sermon', descriptions: ['']},
+        {fixCount: 0, name: 'Long Method'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
+        {fixCount: 0, name: 'Long Scope Var'  , descriptions: ['1つの仕事をするメソッドに分割できないか？', '分割前に別のIssueを解決したか？', '同じ抽象度を話しているか？']},
+        {fixCount: 0, name: 'Big Class'    , descriptions: ['1つの仕事をするクラスに分割できないか？', '']},
+        {fixCount: 0, name: 'Duplicate Code' , descriptions: ['メソッドを切り出して解決できないか？', 'クラスを切り出して解決できないか？']},
+        {fixCount: 0, name: 'Temp Variable', descriptions: ['']},
+        {fixCount: 0, name: 'Long Parameters', descriptions: ['']},
+        {fixCount: 0, name: 'Naming', descriptions: ['']},
+        {fixCount: 0, name: 'Dead Code', descriptions: ['']},
+        {fixCount: 0, name: 'Arrow', descriptions: ['']},
+        {fixCount: 0, name: 'Feature Envy', descriptions: ['']},
+        {fixCount: 0, name: 'Primitive Obsession', descriptions: ['']},
+        {fixCount: 0, name: 'Data Clump', descriptions: ['']},
+        {fixCount: 0, name: 'Violate SLAP', descriptions: ['']},
+        {fixCount: 0, name: 'For', descriptions: ['']},
+        {fixCount: 0, name: 'Mutable', descriptions: ['']},
+        {fixCount: 0, name: 'Switch', descriptions: ['']},
+        {fixCount: 0, name: 'Magic Number', descriptions: ['']},
+        {fixCount: 0, name: 'Incidental Details', descriptions: ['']},
+        {fixCount: 0, name: 'Setup Sermon', descriptions: ['']},
       ],
-      searchWord: "",
     };
   },
 });
@@ -255,7 +272,7 @@ export default defineComponent({
     color: #2980b9;
     animation: blinkAnimation 1s ease infinite alternate;
     transition: 0.1s ease 0.1s;
-    font-size: 50px;
+    font-size: 46px;
     font-weight: bold;
   }
 }
@@ -278,6 +295,37 @@ export default defineComponent({
   background: none;
   &:focus {
     outline-style: none;
+  }
+}
+.code-issue-fix-count {
+  height: 38px;
+  width: 38px;
+  font-size: 20px;
+  border-radius: 50%;
+  text-align: center;
+  border: solid;
+  border-width: 3px;
+  margin-left: 5px;
+  font-weight: bold;
+  background: #8fbde4;
+  border: none;
+  padding-top: 3px;
+  transition: 0.1s ease 0.1s;
+  &.doing {
+    transition: 0.1s ease 0.1s;
+    height: 50px;
+    width: 50px;
+    font-size: 28px;
+    border-radius: 50%;
+    text-align: center;
+    border: solid;
+    border-width: 3px;
+    margin-left: 9px;
+    font-weight: bold;
+    background: #2a80b9;
+    border: none;
+    color: white;
+    padding-top: 3px;
   }
 }
 
