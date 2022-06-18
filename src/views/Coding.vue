@@ -12,33 +12,57 @@
         <div 
           v-bind:class="{current: this.focus === 'test'}"
           class="focus-item focus-test column" tabindex="1" autofocus ref="focusTest" >
-          <div>Test</div>
+          <div>
+              <span class="icon">
+                <i class="far fa-edit"></i>
+              </span>
+              <p>Test</p>
+          </div>
         </div>
         <div 
           v-bind:class="{current: this.focus === 'code'}"
           class="focus-item focus-code column" tabindex="2">
-          Code
+          <div>
+              <span class="icon">
+                <i class="far fa-check-circle"></i>
+              </span>
+              <p>Code</p>
+          </div>
         </div>
         <div 
           v-bind:class="{current: this.focus === 'refactoring'}"
           class="focus-item focus-refactoring column">
-          Clean
+          <div>
+              <span class="icon">
+                <i class="fas fa-seedling"></i>
+              </span>
+              <p>Clean</p>
+          </div>
         </div>
       </div>
       <div class="focus-tool">
         <div class="focus-tool-item" v-if="this.focus === 'test'">
           <div class="zen">
             <p>Define Clear Specification.</p>
+            <span class="icon">
+              <i class="far fa-edit"></i>
+            </span>
           </div>
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'code'" >
           <div class="zen">
             <p>Just Make It Pass.</p>
+            <span class="icon">
+              <i class="far fa-check-circle"></i>
+            </span>
           </div>
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
           <div class="zen">
             <p>Save Knowdlege to Code.</p>
+            <span class="icon">
+              <i class="fas fa-seedling"></i>
+            </span>
             <input v-model="issueSearchWord" ref="issueSearchWord" class="border-less-input" tabindex="3" placeholder="Code Issue">
           </div>
           <div class="issueArea">
@@ -151,9 +175,10 @@ export default defineComponent({
   }
 }
 .focus-item {
+  border-radius: 10px;
   color: white;
   margin: 4px;
-  font-size: 40px;
+  font-size: 50px;
   font-weight: bold;
   height: 250px;
   text-align: center;
@@ -161,6 +186,9 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .icon {
+    font-size: 60px;
+  }
   &.current {
     color: white;
   }
@@ -200,7 +228,6 @@ export default defineComponent({
 .zen {
   margin-top: 80px;
   font-weight: bold;
-  font-family: serif;
   font-size: 50px;
   color: balck;
   text-align: center;
@@ -208,6 +235,9 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .icon {
+    font-size: 80px;
+  }
 }
 .issueArea {
   text-align: center;
@@ -217,7 +247,7 @@ export default defineComponent({
   margin: 5px;
 }
 .tag:not(body).is-large {
-  font-size: 35px;
+  font-size: 30px;
   transition: 0.1s ease 0.1s;
   &.doing {
     height: 200px;
@@ -231,17 +261,17 @@ export default defineComponent({
 }
 @keyframes blinkAnimation {
   0% {
-    border: 20px solid #c6e3ff;
+    border: 25px solid #c6e3ff;
   }
   100% {
-    border: 20px solid #2980b9;
+    border: 25px solid #2980b9;
   }
 }
 .border-less-input {
   text-align: center;
   color: grey;
   padding: 16px;
-  margin: 20px;
+  margin: 80px;
   font-size: 30px;
   border: none;
   border-bottom: 1px solid grey;
@@ -250,4 +280,5 @@ export default defineComponent({
     outline-style: none;
   }
 }
+
 </style>
