@@ -246,7 +246,7 @@ export default defineComponent({
 .zen {
   margin-top: 60px;
   font-weight: bold;
-  font-size: 50px;
+  font-size: 51px;
   color: balck;
   text-align: center;
   display: flex;
