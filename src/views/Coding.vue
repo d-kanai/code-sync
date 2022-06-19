@@ -1,6 +1,6 @@
 <template>
   <div
-   class='content' 
+   class='contents' 
    v-bind:class="[
     {test : this.focus === 'test'},
     {code: this.focus === 'code'},
@@ -59,7 +59,7 @@
         </div>
         <div class="focus-tool-item" v-if="this.focus === 'refactoring'" >
           <div class="zen">
-            <p>Save Knowdlege to Code.</p>
+            <p>Save Knowledge to Code.</p>
             <span class="icon">
               <i class="fas fa-seedling"></i>
             </span>
@@ -167,8 +167,9 @@ export default defineComponent({
   padding: 0px;
   margin: 0px
 }
-.content {
-  padding: 10px;
+.contents {
+  margin-bottom: 0px;;
+  padding: 10px 0px 10px 10px;
   height: 100vh;
   &.test{
     background-color:#ffb0b0;
@@ -243,7 +244,7 @@ export default defineComponent({
   }
 }
 .zen {
-  margin-top: 80px;
+  margin-top: 60px;
   font-weight: bold;
   font-size: 50px;
   color: balck;
@@ -253,6 +254,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   .icon {
+    margin-top: 40px;
     font-size: 80px;
   }
 }
@@ -288,7 +290,7 @@ export default defineComponent({
   text-align: center;
   color: grey;
   padding: 16px;
-  margin: 80px;
+  margin: 50px;
   font-size: 30px;
   border: none;
   border-bottom: 1px solid grey;
